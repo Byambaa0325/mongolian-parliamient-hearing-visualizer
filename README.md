@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Transcript Speaker Tagger
 
 A React web application with database backend for tagging speakers in transcripts and creating a tagged dataset.
@@ -205,3 +206,6 @@ See:
 
 MIT
 
+=======
+# mongolian-parliamient-hearing-visualizer
+>>>>>>> origin/main

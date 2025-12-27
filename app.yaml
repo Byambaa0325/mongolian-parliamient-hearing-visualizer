@@ -1,0 +1,14 @@
+# App Engine configuration (alternative to Cloud Run)
+runtime: python311
+
+env_variables:
+  GOOGLE_CLOUD_PROJECT: ${GOOGLE_CLOUD_PROJECT}
+
+automatic_scaling:
+  min_instances: 0
+  max_instances: 10
+
+resources:
+  cpu: 1
+  memory_gb: 0.5  # 512MB for lightweight React app
+

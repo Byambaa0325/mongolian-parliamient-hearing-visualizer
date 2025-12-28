@@ -21,8 +21,11 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install only what's needed to run Flask
-RUN pip install --no-cache-dir flask gunicorn
+# Copy requirements file
+COPY requirements.txt .
+
+# Install all Python dependencies from requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy built React app from build stage
 COPY --from=build /app/build ./build

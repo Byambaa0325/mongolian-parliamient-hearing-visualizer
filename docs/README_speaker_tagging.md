@@ -18,7 +18,7 @@ Raw transcripts don't have speaker labels. You need to identify:
 Use the provided Python script for guided tagging:
 
 ```bash
-python tag_speakers.py 12.7.txt 12.7_tagged.txt
+python agent/tag_speakers.py 12.7.txt 12.7_tagged.txt
 ```
 
 **Steps:**
@@ -125,14 +125,14 @@ Based on the transcript structure, common speakers include:
 
 ```bash
 # Step 1: Auto-detect patterns
-python tag_speakers.py 12.7.txt 12.7_tagged.txt
+python agent/tag_speakers.py 12.7.txt 12.7_tagged.txt
 # Choose option 2 (auto-tag)
 
 # Step 2: Review and manually correct
 # Open 12.7_tagged.txt and fix errors
 
 # Step 3: Re-run interactive mode for difficult sections
-python tag_speakers.py 12.7.txt 12.7_tagged.txt
+python agent/tag_speakers.py 12.7.txt 12.7_tagged.txt
 # Choose option 1 (interactive)
 ```
 

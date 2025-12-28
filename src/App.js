@@ -22,12 +22,58 @@ function App() {
   const fetchTranscripts = async () => {
     try {
       setLoading(true);
+      setError(null);
+      
+      // First, try health check to verify backend is accessible
+      try {
+        const healthResponse = await fetch(`${API_BASE}/health`);
+        if (!healthResponse.ok) {
+          console.warn('Health check failed, but continuing...');
+        }
+      } catch (e) {
+        console.warn('Health check failed:', e);
+      }
+      
       const response = await fetch(`${API_BASE}/transcripts`);
-      if (!response.ok) throw new Error('Failed to fetch transcripts');
+      
+      if (!response.ok) {
+        // Try to get error message from response
+        let errorMessage = `Failed to fetch transcripts: ${response.status} ${response.statusText}`;
+        let errorDetails = '';
+        try {
+          const errorData = await response.json();
+          if (errorData.error) {
+            errorMessage = errorData.error;
+          }
+          if (errorData.traceback) {
+            errorDetails = errorData.traceback;
+            console.error('Backend traceback:', errorDetails);
+          }
+        } catch (e) {
+          // Response is not JSON, try to get text
+          try {
+            const text = await response.text();
+            errorDetails = text.substring(0, 500);
+            console.error('Backend error response:', errorDetails);
+          } catch (e2) {
+            // Can't read response
+          }
+        }
+        throw new Error(errorMessage);
+      }
+      
+      // Check if response is JSON
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        const text = await response.text();
+        throw new Error(`Backend returned non-JSON response. Make sure Flask server is running on port 8080. Response: ${text.substring(0, 100)}`);
+      }
+      
       const data = await response.json();
       setTranscripts(data);
     } catch (err) {
-      setError(err.message);
+      console.error('Error fetching transcripts:', err);
+      setError(err.message || 'Failed to connect to backend server. Make sure the Flask server is running on port 8080.');
     } finally {
       setLoading(false);
     }

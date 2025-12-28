@@ -1,211 +1,192 @@
-<<<<<<< HEAD
 # Transcript Speaker Tagger
 
 A React web application with database backend for tagging speakers in transcripts and creating a tagged dataset.
 
+## Quick Links
+
+**Getting Started:**
+- 📖 [Quick Start Guide](docs/QUICK_START.md) - Get up and running in 5 minutes
+- 🚀 [Getting Started](docs/GETTING_STARTED.md) - Comprehensive first-time setup
+- 🔌 [Quick Connect](docs/QUICK_CONNECT.md) - Fast database connection
+
+**Documentation:**
+- 📚 [Documentation Index](docs/INDEX.md) - Complete documentation index
+- 💻 [Local Development](docs/LOCAL_DEVELOPMENT.md) - Development setup and workflow
+- ☁️ [Cloud Deployment](docs/DEPLOY.md) - Deploy to Google Cloud Run
+- 🔧 [Troubleshooting](docs/TROUBLESHOOTING.md) - Common issues and solutions
+
+**Agent Tools:**
+- 🤖 [Agent Tools](agent/README.md) - ML/automation scripts for speaker tagging
+- 🎯 [Speaker Tagging ML](docs/SPEAKER_TAGGING_ML.md) - Automated speaker detection
+- 📊 [Speaker Patterns](docs/SPEAKER_PATTERNS.md) - Mongolian speaker patterns reference
+
+**Scripts:**
+- ⚙️ [Scripts](scripts/README.md) - Development, deployment, and database scripts
+
 ## Features
 
-- **Database Storage**: Transcripts and tags stored in database (SQLite/PostgreSQL)
-- **Transcript Selection**: Select from pre-loaded transcripts (12.7.txt, 12.8.txt, 12.10.txt, 12.12.txt)
-- **Interactive Tagging**: Click lines to select and assign speakers
-- **Bulk Tagging**: Select multiple lines (Shift+Click, Ctrl/Cmd+Click) and tag at once
-- **Speaker Management**: Add, remove, and manage speaker names
-- **Search**: Search through transcript content
-- **Pagination**: Efficiently handle large transcripts with pagination
-- **Tagged View**: View tagged transcript with filtering and grouping options
-- **Statistics**: See speaker statistics and line counts with progress tracking
-- **Export**: Export tagged transcripts in multiple formats:
-  - Plain Text (.txt)
-  - JSON (.json)
-  - SRT Subtitles (.srt)
-  - CSV (.csv)
+- **Database Storage**: SQLite (local) or PostgreSQL (cloud) for persistent data
+- **Interactive Tagging UI**: Click-based line selection with keyboard shortcuts
+- **Bulk Operations**: Multi-select with Shift+Click and Ctrl/Cmd+Click
+- **ML/NLP Speaker Detection**: Automated speaker identification for Mongolian transcripts
+- **Search & Filter**: Find content and filter by speaker
+- **Progress Tracking**: Visual statistics and completion metrics
+- **Export Formats**: TXT, JSON, SRT, CSV
 
-## Installation
+## Quick Start
 
-1. Install dependencies:
+### 1. Install Dependencies
+
 ```bash
+# Python dependencies
+pip install -r requirements.txt
+
+# Node.js dependencies
 npm install
 ```
 
-2. Start the development server:
-```bash
-npm start
-```
-
-3. Open [http://localhost:3000](http://localhost:3000) in your browser
-
-## Setup
-
-### 1. Configure Environment Variables (Optional)
-
-For local development, you can use a `.env` file:
+### 2. Load Transcripts
 
 ```bash
-# Copy example file
-cp .env.example .env
-
-# Edit .env if needed (defaults work for SQLite)
-```
-
-See [README_ENV.md](README_ENV.md) for detailed environment variable documentation.
-
-### 2. Load Transcripts into Database
-
-Before using the app, load the transcript files:
-
-```bash
-# Linux/Mac
-python3 -m backend.load_transcripts
-
-# Windows PowerShell
+# Load transcript files into database
 python -m backend.load_transcripts
 ```
 
-This will load:
-- `12.7.txt` (December 7, 2024)
-- `12.8.txt` (December 8, 2024)
-- `12.10.txt` (December 10, 2024)
-- `12.12.txt` (December 12, 2024)
-
-### 3. Start the Application
+### 3. Start Application
 
 ```bash
-npm start
+# Windows
+scripts\dev\start_dev.bat
+
+# Linux/Mac
+./scripts/dev/start_dev.sh
 ```
+
+The app will be available at:
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:8080
+
+📖 See [Quick Start Guide](docs/QUICK_START.md) for detailed instructions.
 
 ## Usage
 
-### Selecting a Transcript
+### Web Interface
 
-1. Go to the "Select Transcript" tab
-2. Choose one of the loaded transcripts
-3. View progress and statistics for each transcript
+1. **Select Transcript** - Choose from pre-loaded transcripts
+2. **Tag Speakers** - Click lines to select, then assign speakers
+3. **View Results** - Review tagged data with filters and grouping
+4. **Export** - Download in your preferred format
 
-### Tagging Speakers
+**Keyboard Shortcuts:**
+- Click: Select single line
+- Shift + Click: Select range
+- Ctrl/Cmd + Click: Multi-select
 
-1. Navigate to the "Tagging" tab
-2. Click on lines to select them
-   - Single click: Select one line
-   - Shift+Click: Select range of lines
-   - Ctrl/Cmd+Click: Select multiple individual lines
-3. Click a speaker button to assign that speaker to selected lines
-4. Add new speakers using the "Add new speaker" input
-5. Use the search box to find specific content
+📖 See [Local Development](docs/LOCAL_DEVELOPMENT.md) for detailed usage instructions.
 
-### Viewing Tagged Data
+## Automated Speaker Tagging
 
-1. Go to the "Tagged View" tab
-2. Filter by speaker using the dropdown
-3. Toggle "Group by speaker" to see all lines from each speaker together
-4. View speaker statistics at the top
+Use ML tools to automatically tag speakers in Mongolian transcripts:
 
-### Exporting
+### Interactive Notebook (Best for exploration)
 
-1. In the "Tagged View" tab, scroll to the export panel
-2. Select export format (TXT, JSON, SRT, or CSV)
-3. Click "Export" to download the file
+```bash
+jupyter notebook agent/speaker_tagging_ml.ipynb
+```
 
-## Keyboard Shortcuts
+### Command-Line (Best for automation)
 
-- **Click**: Select single line
-- **Shift + Click**: Select range of lines
-- **Ctrl/Cmd + Click**: Multi-select individual lines
+```bash
+# Tag a single file
+python agent/tag_speakers_ml.py 12.7.txt
+
+# With options
+python agent/tag_speakers_ml.py 12.7.txt \
+    --output tagged.txt \
+    --export-json \
+    --export-csv
+```
+
+**Features:**
+- Multi-pattern detection for Mongolian text
+- Context-aware speaker assignment
+- Confidence scoring (0.5-0.9)
+- Quality metrics and recommendations
+
+📖 See [Agent Tools](agent/README.md) for all available tools and [Speaker Tagging ML](docs/SPEAKER_TAGGING_ML.md) for detailed documentation.
 
 ## Project Structure
 
 ```
-src/
-  ├── App.js                 # Main application component
-  ├── App.css                # Main app styles
-  ├── components/
-  │   ├── FileUpload.js      # File upload component
-  │   ├── TranscriptViewer.js # Main tagging interface
-  │   ├── TaggedView.js      # View tagged transcript
-  │   └── ExportPanel.js     # Export functionality
-  └── index.js               # Entry point
+ot-transcripts/
+├── agent/                 # Automation and ML tools
+│   ├── tag_speakers_ml.py        # ML-based speaker tagger
+│   ├── speaker_tagging_ml.ipynb  # Interactive notebook
+│   ├── tag_speakers.py           # Pattern-based tagger
+│   └── check_db.py               # Database tools
+├── backend/               # Flask API and database
+│   ├── api.py                    # REST API endpoints
+│   ├── database.py               # SQLAlchemy models
+│   └── load_transcripts.py      # Data loading
+├── docs/                  # Documentation
+│   ├── INDEX.md                  # Documentation index
+│   ├── QUICK_START.md            # Quick start guide
+│   ├── SPEAKER_TAGGING_ML.md     # ML tagging docs
+│   └── ...                       # More docs
+├── scripts/               # Operational scripts
+│   ├── dev/                      # Development scripts
+│   ├── deploy/                   # Deployment scripts
+│   └── database/                 # Database scripts
+├── src/                   # React frontend
+│   ├── App.js                    # Main component
+│   └── components/               # UI components
+├── server.py              # Flask server entry point
+└── requirements.txt       # Python dependencies
 ```
 
 ## Technologies
 
+**Frontend:**
 - React 18
 - CSS3 (no external UI libraries)
-- File API for file handling
-- Blob API for file downloads
+- Modern browser APIs
 
-## Browser Support
+**Backend:**
+- Flask (Python web framework)
+- SQLAlchemy (ORM)
+- SQLite/PostgreSQL
 
-- Chrome (recommended)
-- Firefox
-- Safari
-- Edge
+**ML/NLP:**
+- pandas, numpy, scikit-learn
+- Custom pattern detection for Mongolian text
 
-## Deployment to Google Cloud Run
+## Cloud Deployment
 
-This app can be deployed to Google Cloud Run using the same architecture as the reference app.
+Deploy to Google Cloud Run with Cloud SQL:
 
-### Quick Deploy
+```bash
+# Set project ID
+export PROJECT_ID=your-project-id
 
-1. **Set your project ID:**
-   ```bash
-   export PROJECT_ID=your-project-id
-   # Or on Windows PowerShell:
-   $env:PROJECT_ID = "your-project-id"
-   ```
+# Deploy
+./scripts/deploy/deploy.sh
+```
 
-2. **Deploy using Cloud Build:**
-   ```bash
-   # Linux/Mac
-   ./deploy.sh
-   
-   # Windows PowerShell
-   .\deploy.ps1
-   
-   # Or manually
-   gcloud builds submit --config=cloudbuild.yaml --project=YOUR_PROJECT_ID
-   ```
+The app includes:
+- Multi-stage Docker build
+- Cloud Build configuration
+- Cloud SQL integration
+- Automatic HTTPS
 
-3. **Get your service URL:**
-   ```bash
-   gcloud run services describe transcript-tagger \
-     --region us-central1 \
-     --project YOUR_PROJECT_ID \
-     --format 'value(status.url)'
-   ```
-
-### Deployment Files
-
-- `Dockerfile` - Multi-stage build (Node.js for build, Python for serving)
-- `cloudbuild.yaml` - Cloud Build configuration
-- `server.py` - Flask server to serve React static files
-- `requirements.txt` - Python dependencies
-- `deploy.sh` / `deploy.ps1` - Deployment scripts
-
-See [DEPLOY.md](DEPLOY.md) for detailed deployment instructions.
+📖 See [Deployment Guide](docs/DEPLOY.md) for complete instructions.
 
 ## Database
 
-The app uses a database to store transcripts and tags:
+**Local:** SQLite (default) - `transcripts.db`  
+**Cloud:** PostgreSQL on Cloud SQL
 
-- **Local Development**: SQLite (default) - stored in `transcripts.db` file
-- **Production (Cloud Run)**: Cloud SQL PostgreSQL - managed database service
-
-**Important:** Cloud Run is serverless/stateless, so you **must** use Cloud SQL for persistent storage in production.
-
-See:
-- [README_DATABASE.md](README_DATABASE.md) - Database schema and local setup
-- [DEPLOY_DATABASE.md](DEPLOY_DATABASE.md) - Cloud SQL setup for Cloud Run
-
-## Notes
-
-- Transcripts are stored in the database, not in browser
-- Tags are saved immediately to the database
-- Large transcripts are handled with pagination
-- For production deployment, use PostgreSQL on Cloud SQL
+📖 See [Database Setup](docs/README_DATABASE.md) and [Cloud SQL Setup](docs/DEPLOY_DATABASE.md).
 
 ## License
 
 MIT
-
-=======
-# mongolian-parliamient-hearing-visualizer
->>>>>>> origin/main

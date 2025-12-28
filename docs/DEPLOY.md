@@ -75,7 +75,27 @@ gcloud builds submit --config=cloudbuild.yaml --project=$PROJECT_ID
 
 ## After Deployment
 
-### 1. Set Up Database (Cloud SQL)
+### 1. Set Up Database Connection
+
+**Your Cloud SQL database is already set up!**
+
+- **Connection Name**: `lazy-jeopardy:europe-west1:parliamient-hearing-db`
+- **Public IP**: `35.205.155.54`
+- **Port**: `5432`
+
+See [DATABASE_CONNECTION.md](DATABASE_CONNECTION.md) for detailed connection instructions.
+
+**Quick connect:**
+```bash
+# Set your database credentials
+export DB_PASSWORD=your-password
+export DB_USER=your-database-user
+export DB_NAME=transcripts
+
+# Connect Cloud Run to database
+./scripts/deploy/connect_database.sh
+# Or on Windows: .\scripts\deploy\connect_database.ps1
+```
 
 **Cloud Run is serverless and stateless** - you need a managed database for persistent storage.
 
@@ -83,11 +103,11 @@ gcloud builds submit --config=cloudbuild.yaml --project=$PROJECT_ID
 ```bash
 # Run setup script
 export PROJECT_ID=your-project-id
-./setup_cloud_sql.sh
+./scripts/deploy/setup_cloud_sql.sh
 
 # Or on Windows
 $env:PROJECT_ID = "your-project-id"
-.\setup_cloud_sql.ps1
+.\scripts\deploy\setup_cloud_sql.ps1
 ```
 
 This creates a Cloud SQL PostgreSQL instance. **Save the password!**

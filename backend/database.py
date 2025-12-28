@@ -21,14 +21,42 @@ class Transcript(db.Model):
     lines = db.relationship('TranscriptLine', backref='transcript', lazy=True, cascade='all, delete-orphan')
     
     def to_dict(self):
-        return {
-            'id': self.id,
-            'filename': self.filename,
-            'date': self.date.isoformat() if self.date else None,
-            'total_lines': self.total_lines,
-            'tagged_lines': len([l for l in self.lines if l.speaker]),
-            'created_at': self.created_at.isoformat()
-        }
+        """Convert transcript to dictionary"""
+        try:
+            # Count tagged lines safely - use relationship if available, otherwise query directly
+            tagged_count = 0
+            try:
+                # Try using the relationship first (faster if already loaded)
+                tagged_count = len([l for l in self.lines if l.speaker])
+            except Exception:
+                # If relationship fails, use direct query
+                # TranscriptLine is defined later in this file, so we can reference it
+                tagged_count = db.session.query(TranscriptLine).filter(
+                    TranscriptLine.transcript_id == self.id,
+                    TranscriptLine.speaker.isnot(None)
+                ).count()
+            
+            return {
+                'id': self.id,
+                'filename': self.filename,
+                'date': self.date.isoformat() if self.date else None,
+                'total_lines': self.total_lines or 0,
+                'tagged_lines': tagged_count,
+                'created_at': self.created_at.isoformat() if self.created_at else None
+            }
+        except Exception as e:
+            # Fallback to basic info if anything fails
+            import traceback
+            print(f"Error in to_dict for transcript {self.id}: {e}")
+            print(traceback.format_exc())
+            return {
+                'id': self.id,
+                'filename': self.filename,
+                'date': self.date.isoformat() if self.date else None,
+                'total_lines': self.total_lines or 0,
+                'tagged_lines': 0,
+                'created_at': self.created_at.isoformat() if self.created_at else None
+            }
 
 
 class TranscriptLine(db.Model):

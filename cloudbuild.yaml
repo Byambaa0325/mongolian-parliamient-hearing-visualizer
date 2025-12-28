@@ -22,7 +22,7 @@ steps:
       - '--image'
       - 'gcr.io/$PROJECT_ID/transcript-tagger'
       - '--region'
-      - 'us-central1'
+      - 'europe-west1'
       - '--platform'
       - 'managed'
       - '--allow-unauthenticated'
@@ -34,10 +34,11 @@ steps:
       - '10'
       - '--min-instances'
       - '0'
-      # Cloud SQL connection (set via substitution or manually after setup)
-      # Uncomment and set after running setup_cloud_sql.sh:
-      # - '--add-cloudsql-instances'
-      # - '${_CLOUD_SQL_CONNECTION_NAME}'
+      # Cloud SQL connection
+      - '--add-cloudsql-instances'
+      - 'lazy-jeopardy:europe-west1:parliamient-hearing-db'
+      # DATABASE_URL will be set via gcloud command after deployment
+      # or uncomment below and set substitution:
       # - '--set-env-vars'
       # - 'DATABASE_URL=${_DATABASE_URL}'
 

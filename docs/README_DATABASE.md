@@ -63,10 +63,10 @@ See [DEPLOY_DATABASE.md](DEPLOY_DATABASE.md) for Cloud SQL setup instructions.
    Or use the helper scripts:
    ```bash
    # Linux/Mac
-   ./load_transcripts.sh
+   ./scripts/database/load_transcripts.sh
    
    # Windows
-   .\load_transcripts.ps1
+   .\scripts\database\load_transcripts.ps1
    ```
 
 ### Production (Cloud Run)
